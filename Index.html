@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitFlow Pro v2.2</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #121824;
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+        }
+        header {
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #1e293b;
+        }
+        h1 { margin: 0; font-size: 24px; color: #38bdf8; }
+        p.subtitle { margin: 5px 0 0 0; font-size: 12px; color: #94a3b8; }
+        
+        .card {
+            background-color: #1e293b;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        
+        .label { display: block; font-size: 11px; font-weight: bold; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px; }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #ffffff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        select.input-field { width: 100%; height: 42px; }
+        
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .btn-primary { background-color: #0284c7; color: white; }
+        .btn-orange { background-color: #ea580c; color: white; }
+        .btn-blue { background-color: #2563eb; color: white; }
+        .btn-emerald { background-color: #059669; color: white; }
+        .btn-purple { background-color: #7c3aed; color: white; }
+        .btn-danger { background-color: #dc2626; color: white; }
+        .btn-clear { background-color: transparent; border: 1px solid #475569; color: #94a3b8; }
+        
+        .badge-box { text-align: center; padding: 15px; border-radius: 10px; margin-bottom: 10px; }
+        .bg-orange { background-color: #2c1a14; border: 1px solid #7c2d12; }
+        .bg-blue { background-color: #172554; border: 1px solid #1e3a8a; }
+        .bg-emerald { background-color: #064e3b; border: 1px solid #065f46; }
+        .bg-purple { background-color: #2e1065; border: 1px solid #4c1d95; }
+        
+        .huge-text { font-size: 28px; font-weight: 900; margin: 5px 0 0 0; }
+        .orange-text { color: #f97316; }
+        .blue-text { color: #3b82f6; }
+        .emerald-text { color: #10b981; }
+        .purple-text { color: #a78bfa; }
+        
+        .progress-container { background-color: #0f172a; border-radius: 10px; height: 12px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; transition: width 0.3s ease; }
+        .pb-orange { background-color: #f97316; }
+        .pb-blue { background-color: #3b82f6; }
+        .pb-purple { background-color: #8b5cf6; }
+        
+        .flex-row { display: flex; gap: 8px; margin-bottom: 10px; }
+        .flex-row input { flex: 1; margin-bottom: 0; }
+        .flex-row .btn { width: auto; padding: 10px 15px; }
+        
+        ul.history { list-style: none; padding: 0; margin: 10px 0 0 0; max-height: 120px; overflow-y: auto; font-size: 13px; }
+        ul.history li { padding: 8px; border-bottom: 1px solid #334155; display: flex; justify-content: space-between; align-items:center; }
+        ul.history li .meta { color: #94a3b8; font-size: 12px; }
+        ul.history li button { margin-left: 8px; padding: 6px 8px; border-radius:6px; font-size:12px; cursor:pointer; border: none; background:#334155; color:#fff; }
+        
+        .insight-box { background-color: #0f172a; padding: 12px; border-radius: 8px; font-size: 13px; border-left: 4px solid #475569; margin-top: 10px; line-height: 1.4; }
+        .sleep-input-group { border: 1px solid #2d3748; padding: 10px; border-radius: 8px; background-color: #1a202c; margin-bottom: 12px; }
+        .sleep-input-title { font-size: 11px; font-weight: bold; color: #a78bfa; text-transform: uppercase; margin-bottom: 8px; text-align: center;}
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FitFlow Pro</h1>
+        <p class="subtitle">Version 2.2 — Cloud Hosted & Cloud Saved</p>
+    </header>
+
+    <div class="card">
+        <h2>Your Profile</h2>
+        <form id="profileForm" onsubmit="return false;">
+            <label class="label">Gender</label>
+            <select id="gender" class="input-field" onchange="saveProfileAndCalc()">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <div class="grid-2">
+                <div>
+                    <label class="label">Age (yrs)</label>
+                    <input type="number" id="age" value="28" class="input-field" oninput="saveProfileAndCalc()">
+                </div>
+                <div>
+                    <label class="label">Baseline Wt (lbs)</label>
+                    <input type="number" id="weight" value="203.8" class="input-field" oninput="saveProfileAndCalc()">
+                </div>
+            </div>
+
+            <label class="label">Height</label>
+            <div class="grid-2">
+                <input type="number" id="heightFt" value="6" placeholder="ft" class="input-field" oninput="saveProfileAndCalc()">
+                <input type="number" id="heightIn" value="3" placeholder="in" class="input-field" oninput="saveProfileAndCalc()">
+            </div>
+
+            <label class="label">Activity Level</label>
+            <select id="activity" class="input-field" onchange="saveProfileAndCalc()">
+                <option value="1.2">Sedentary (No exercise)</option>
+                <option value="1.375">Lightly Active (1-3 days/wk)</option>
+                <option value="1.55">Moderately Active (3-5 days/wk)</option>
+            </select>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Weight Tracker</h2>
+        <div class="grid-2">
+            <div class="badge-box bg-emerald">
+                <span class="label">Current</span>
+                <p class="huge-text emerald-text"><span id="curWeight">203.8</span></p>
+            </div>
+            <div class="badge-box bg-emerald">
+                <span class="label">Net Change</span>
+                <p class="huge-text" id="changeWeight" style="color:#94a3b8">0.0</p>
+            </div>
+        </div>
+        <div class="flex-row">
+            <input type="number" step="0.1" id="newWeightInput" placeholder="New Weight" class="input-field">
+            <button type="button" class="btn btn-emerald" onclick="submitWeight()">Log</button>
+        </div>
+        <ul id="weightHistory" class="history"></ul>
+    </div>
+
+    <div class="grid-3">
+        <div class="badge-box bg-orange">
+            <span class="label">Calorie Goal</span>
+            <p class="huge-text orange-text"><span id="calTarget">2144</span></p>
+        </div>
+        <div class="badge-box bg-blue">
+            <span class="label">Hydration Goal</span>
+            <p class="huge-text blue-text"><span id="waterTarget">102</span> <span style="font-size:10px">oz</span></p>
+        </div>
+        <div class="badge-box bg-purple">
+            <span class="label">Sleep Quality</span>
+            <p class="huge-text purple-text" id="sleepQualityDisplay">--</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>💤 Smartwatch Sleep Tracker</h2>
+        <div style="font-size: 15px; font-weight: bold; margin-bottom: 5px;">
+            Total Rest: <span id="totalSleepDisplay" class="purple-text">0h 0m</span>
+        </div>
+        <span class="label" id="deepSleepPercentLabel">Deep Sleep: 0%</span>
+        <div class="progress-container">
+            <div id="sleepProgress" class="progress-bar pb-purple"></div>
+        </div>
+
+        <div class="sleep-input-group">
+            <div class="sleep-input-title">Deep Sleep</div>
+            <div class="grid-2">
+                <input type="number" id="deepH" placeholder="Hours" class="input-field" style="margin-bottom:0">
+                <input type="number" id="deepM" placeholder="Minutes" class="input-field" style="margin-bottom:0">
+            </div>
+        </div>
+
+        <div class="sleep-input-group">
+            <div class="sleep-input-title">Light Sleep</div>
+            <div class="grid-2">
+                <input type="number" id="lightH" placeholder="Hours" class="input-field" style="margin-bottom:0">
+                <input type="number" id="lightM" placeholder="Minutes" class="input-field" style="margin-bottom:0">
+            </div>
+        </div>
+
+        <div class="sleep-input-group">
+            <div class="sleep-input-title">Awake Time</div>
+            <div class="grid-2">
+                <input type="number" id="awakeH" placeholder="Hours" class="input-field" style="margin-bottom:0">
+                <input type="number" id="awakeM" placeholder="Minutes" class="input-field" style="margin-bottom:0">
+            </div>
+        </div>
+
+        <div class="flex-row">
+            <button type="button" class="btn btn-purple" style="flex:2" onclick="addSleepLog(true)">Log Watch Sleep</button>
+            <button type="button" class="btn btn-clear" style="flex:1" onclick="resetSleep(true)">Clear</button>
+        </div>
+
+        <div class="insight-box" id="sleepInsight">
+            Enter your sleep stages from your smartwatch to view your automated recovery insight.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔥 Calories: <span id="calLogged">0</span> / <span id="calTargetLabel">2144</span> kcal</h2>
+        <div class="progress-container">
+            <div id="calProgress" class="progress-bar pb-orange"></div>
+        </div>
+        <div class="flex-row">
+            <input type="number" id="calInput" placeholder="e.g. 450" class="input-field">
+            <button type="button" class="btn btn-orange" onclick="addCalories()">Add</button>
+            <button type="button" class="btn btn-clear" onclick="resetCalories(true)">Clear</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>💧 Water: <span id="waterLogged">0</span> / <span id="waterTargetLabel">102</span> oz</h2>
+        <div class="progress-container">
+            <div id="waterProgress" class="progress-bar pb-blue"></div>
+        </div>
+        <div style="margin-bottom:12px">
+            <button type="button" class="btn btn-blue" style="width:100%; margin-bottom:8px" onclick="addWater(34)">+1 Liter Bottle (34 oz)</button>
+        </div>
+        <div class="flex-row">
+            <input type="number" id="waterInput" placeholder="Custom Oz" class="input-field">
+            <button type="button" class="btn btn-blue" onclick="addCustomWater()">Add</button>
+            <button type="button" class="btn btn-clear" onclick="resetWater(true)">Clear</button>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; margin-bottom: 20px;">
+        <button type="button" class="btn btn-danger" onclick="startNewDayGlobal()">🌅 Start New Day (Reset Today's Logs)</button>
+    </div>
+
+    <script>
+        var targetCalories = 2144;
+        var targetWater = 102;
+        var loggedCalories = 0;
+        var loggedWater = 0;
+        var weightLogs = []; // each entry: { weight: number, when: ISOstring }
+        var sleepState = { deepH: "", deepM: "", lightH: "", lightM: "", awakeH: "", awakeM: "" };
+
+        // Load data on window load safely from hosted storage
+        window.onload = function() {
+            try {
+                if (localStorage.getItem('ff_profile')) {
+                    var p = JSON.parse(localStorage.getItem('ff_profile'));
+                    if (p.gender) document.getElementById('gender').value = p.gender;
+                    if (p.age !== undefined) document.getElementById('age').value = p.age;
+                    if (p.weight !== undefined) document.getElementById('weight').value = p.weight;
+                    if (p.heightFt !== undefined) document.getElementById('heightFt').value = p.heightFt;
+                    if (p.heightIn !== undefined) document.getElementById('heightIn').value = p.heightIn;
+                    if (p.activity !== undefined) document.getElementById('activity').value = p.activity;
+                }
+                if (localStorage.getItem('ff_weightLogs')) {
+                    weightLogs = JSON.parse(localStorage.getItem('ff_weightLogs')) || [];
+                    renderWeightHistoryList();
+                }
+                if (localStorage.getItem('ff_loggedCalories')) {
+                    loggedCalories = parseFloat(localStorage.getItem('ff_loggedCalories')) || 0;
+                }
+                if (localStorage.getItem('ff_loggedWater')) {
+                    loggedWater = parseFloat(localStorage.getItem('ff_loggedWater')) || 0;
+                }
+                if (localStorage.getItem('ff_sleepState')) {
+                    sleepState = JSON.parse(localStorage.getItem('ff_sleepState')) || sleepState;
+                    document.getElementById('deepH').value = sleepState.deepH;
+                    document.getElementById('deepM').value = sleepState.deepM;
+                    document.getElementById('lightH').value = sleepState.lightH;
+                    document.getElementById('lightM').value = sleepState.lightM;
+                    document.getElementById('awakeH').value = sleepState.awakeH;
+                    document.getElementById('awakeM').value = sleepState.awakeM;
+                    if(sleepState.deepH || sleepState.deepM || sleepState.lightH || sleepState.lightM) {
+                        addSleepLog(false); // Render the saved calculations without re-saving
+                    }
+                }
+            } catch(e) { console.log("Storage load exception error safely caught.", e); }
+            calculateAll();
+            renderUI();
+        };
+
+        function saveProfileAndCalc() {
+            try {
+                var p = {
+                    gender: document.getElementById('gender').value,
+                    age: document.getElementById('age').value,
+                    weight: document.getElementById('weight').value,
+                    heightFt: document.getElementById('heightFt').value,
+                    heightIn: document.getElementById('heightIn').value,
+                    activity: document.getElementById('activity').value
+                };
+                localStorage.setItem('ff_profile', JSON.stringify(p));
+            } catch(e){ console.log(e); }
+            calculateAll();
+            renderUI();
+        }
+
+        function calculateAll() {
+            var gender = document.getElementById('gender').value;
+            var age = parseFloat(document.getElementById('age').value) || 28;
+            var baselineWeight = parseFloat(document.getElementById('weight').value) || 203.8;
+            var heightFt = parseFloat(document.getElementById('heightFt').value) || 6;
+            var heightIn = parseFloat(document.getElementById('heightIn').value) || 3;
+            var activity = parseFloat(document.getElementById('activity').value) || 1.2;
+
+            var currentWeight = (weightLogs.length > 0) ? parseFloat(weightLogs[0].weight) : baselineWeight;
+
+            var weightKg = currentWeight * 0.45359237;
+            var totalInches = (heightFt * 12) + heightIn;
+            var heightCm = totalInches * 2.54;
+
+            var bmr = 0;
+            if (gender === 'male') {
+                bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + 5;
+            } else {
+                bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) - 161;
+            }
+
+            targetCalories = Math.round(bmr * activity);
+            targetWater = Math.round(currentWeight * 0.5);
+
+            document.getElementById('calTarget').innerHTML = targetCalories;
+            document.getElementById('calTargetLabel').innerHTML = targetCalories;
+            document.getElementById('waterTarget').innerHTML = targetWater;
+            document.getElementById('waterTargetLabel').innerHTML = targetWater;
+            
+            document.getElementById('curWeight').innerHTML = currentWeight;
+
+            // ensure change is numeric for reliable comparisons
+            var changeNum = parseFloat((currentWeight - baselineWeight).toFixed(1));
+            var changeEl = document.getElementById('changeWeight');
+            if (changeNum > 0) {
+                changeEl.innerHTML = "+" + changeNum.toFixed(1) + " lbs";
+                changeEl.style.color = "#ea580c";
+            } else if (changeNum < 0) {
+                changeEl.innerHTML = changeNum.toFixed(1) + " lbs";
+                changeEl.style.color = "#10b981";
+            } else {
+                changeEl.innerHTML = "0.0 lbs";
+                changeEl.style.color = "#94a3b8";
+            }
+
+            // keep UI consistent
+            renderUI();
+        }
+
+        function addSleepLog(shouldSave) {
+            var dh = parseInt(document.getElementById('deepH').value) || 0;
+            var dm = parseInt(document.getElementById('deepM').value) || 0;
+            var lh = parseInt(document.getElementById('lightH').value) || 0;
+            var lm = parseInt(document.getElementById('lightM').value) || 0;
+            var ah = parseInt(document.getElementById('awakeH').value) || 0;
+            var am = parseInt(document.getElementById('awakeM').value) || 0;
+            
+            var totalDeepMins = (dh * 60) + dm;
+            var totalLightMins = (lh * 60) + lm;
+            var totalAwakeMins = (ah * 60) + am;
+            var totalMins = totalDeepMins + totalLightMins + totalAwakeMins;
+
+            if (totalMins <= 0) {
+                document.getElementById('totalSleepDisplay').innerHTML = "0h 0m";
+                document.getElementById('deepSleepPercentLabel').innerHTML = "Deep Sleep: 0%";
+                document.getElementById('sleepProgress').style.width = "0%";
+                document.getElementById('sleepQualityDisplay').innerHTML = "--";
+                document.getElementById('sleepQualityDisplay').style.color = "#a78bfa";
+                document.getElementById('sleepInsight').innerHTML = 'Enter your sleep stages from your smartwatch to view your automated recovery insight.';
+                document.getElementById('sleepInsight').style.borderLeftColor = "#475569";
+                return;
+            }
+
+            if(shouldSave) {
+                try {
+                    sleepState = { deepH: dh, deepM: dm, lightH: lh, lightM: lm, awakeH: ah, awakeM: am };
+                    localStorage.setItem('ff_sleepState', JSON.stringify(sleepState));
+                } catch(e){ console.log(e); }
+            }
+
+            var displayHours = Math.floor(totalMins / 60);
+            var displayMinutes = totalMins % 60;
+            document.getElementById('totalSleepDisplay').innerHTML = displayHours + "h " + displayMinutes + "m";
+
+            var deepPct = Math.round((totalDeepMins / totalMins) * 100);
+            document.getElementById('deepSleepPercentLabel').innerHTML = "Deep Sleep: " + deepPct + "%";
+            document.getElementById('sleepProgress').style.width = Math.min(deepPct, 100) + "%";
+
+            var totalHoursFloat = totalMins / 60;
+            var qualityBox = document.getElementById('sleepQualityDisplay');
+            var insightBox = document.getElementById('sleepInsight');
+
+            var statusTitle = "
